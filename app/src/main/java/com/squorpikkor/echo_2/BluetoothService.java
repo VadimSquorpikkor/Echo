@@ -13,7 +13,7 @@ import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.UUID;
 
-class BluetoothChatService {
+class BluetoothService {
 
     public static final String TAG = "tag";
     // Name for the SDP record when creating server socket
@@ -25,13 +25,16 @@ class BluetoothChatService {
 //    private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 //    private static final UUID MY_UUID = UUID.fromString("0000110a-0000-1000-8000-00805f9b34fb");
 
-    public BluetoothChatService() {
-        Log.e(TAG, "♣START BluetoothChatService");
+    DataRegister dataRegister;
+
+    public BluetoothService(DataRegister dataRegister) {
+        Log.e(TAG, "♣START BluetoothService");
         this.mState = STATE_NONE;
         mAdapter = BluetoothAdapter.getDefaultAdapter();
 
 //        mBuffer = new byte[3084];
         mTotalBytes = 50;//MESSAGE_DEFAULT_LENGTH;
+        this.dataRegister = dataRegister;
     }
 
     private int mState;
@@ -78,7 +81,6 @@ class BluetoothChatService {
             try {
                 tmp = mAdapter.listenUsingRfcommWithServiceRecord(NAME, MY_UUID);
                 Log.e(TAG, "♦AcceptThread: LISTENING...");
-
             } catch (IOException e) {
                 Log.e(TAG, "listen() failed", e);
             }
@@ -89,11 +91,8 @@ class BluetoothChatService {
             setName("AcceptThread");
             BluetoothSocket socket = null;
             // Listen to the server socket if we're not connected
-//            while (mState != STATE_CONNECTED || !mAcceptThread.isInterrupted()) {
-//            while (mState != STATE_CONNECTED || !Thread.currentThread().isInterrupted()) {
             while (mState != STATE_CONNECTED && isRunning) {
             int count = 0;
-//                Log.e(TAG, "run: mState = "+mState+" Thread.currentThread().isInterrupted() = "+Thread.currentThread().isInterrupted());
                 Log.e(TAG, "run: "+count++);
                 try {
                     Log.e(TAG, "run: Wait connection...");
@@ -101,14 +100,13 @@ class BluetoothChatService {
                     socket = mmServerSocket.accept();
                 } catch (Exception e2) {
                     Log.e(TAG, "run: Exception e2");
-//                    start();
                 }
 
                 Log.e(TAG, "run: ACCEPTED");
 
                 // If a connection was accepted
                 if (socket != null) {
-                    synchronized (BluetoothChatService.this) {
+                    synchronized (BluetoothService.this) {
                         switch (mState) {
                             case STATE_LISTEN:
                             case STATE_CONNECTING:
@@ -135,9 +133,7 @@ class BluetoothChatService {
         public void cancel() {
             try {
                 mmServerSocket.close();
-                interrupt();
                 isRunning = false;
-
             } catch (IOException e) {
                 Log.e(TAG, "close() of server failed", e);
             }
@@ -178,9 +174,14 @@ class BluetoothChatService {
         private final InputStream mmInStream;
         private final OutputStream mmOutStream;
 
+
         private NotificationManager mNotificationManager;
 
             private final byte[] mBuffer;
+
+            boolean isRunning = true;
+
+        Response response1 = new Response(dataRegister);
 
         public ConnectedThread(BluetoothSocket socket) {
             Log.d(TAG, "create ConnectedThread");
@@ -190,6 +191,7 @@ class BluetoothChatService {
             mmSocket = socket;
             InputStream tmpIn = null;
             OutputStream tmpOut = null;
+
 
             // Get the BluetoothSocket input and output streams
             try {
@@ -201,12 +203,14 @@ class BluetoothChatService {
 
             mmInStream = tmpIn;
             mmOutStream = tmpOut;
+
+//            Response response = new Response()
         }
 
         public void run() {
             Log.e(TAG, "BEGIN mConnectedThread");
 //            while (!mConnectedThread.isInterrupted()) {
-            while (!Thread.currentThread().isInterrupted()) {
+            while (isRunning) {
                 try {
                     // Read from the InputStream
                     int x1 = mmInStream.read();
@@ -229,7 +233,7 @@ class BluetoothChatService {
 
                     //Log.e(TAG, ">>> "+Arrays.toString(request));
 
-                    byte[] response = Response.getResponseByRequest(request);
+                    byte[] response = response1.getResponseByRequest(request);
                     if (response!=null) mmOutStream.write(response);
 
                     ///mmOutStream.write(new byte[]{1, 17, 18, 48, 0, 1, 114, 21, 10, 4, 0, 12, 0, 12, 6, 0, 0, 0, 0, 0, 0, 51, 46});
@@ -245,8 +249,8 @@ class BluetoothChatService {
 
         public void cancel() {
             try {
+                isRunning = false;
                 mmSocket.close();
-                interrupt();
             } catch (IOException e) {
                 Log.e(TAG, "close() of connect socket failed", e);
             }

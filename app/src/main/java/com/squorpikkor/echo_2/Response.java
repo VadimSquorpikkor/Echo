@@ -14,7 +14,14 @@ import java.util.Arrays;
 
 class Response {
 
-    public static byte[] getResponseByRequest(byte[] request) {
+
+    DataRegister dataRegister;
+
+    public Response(DataRegister dataRegister) {
+        this.dataRegister = dataRegister;
+    }
+
+    public byte[] getResponseByRequest(byte[] request) {
         if (request.length<2) return null;
         Log.e("TAG", ">>> "+ Arrays.toString(request));
         byte[] response;
@@ -153,8 +160,9 @@ class Response {
         return new byte[]{1, 18, 2, 1, 37, 51, 125};
     }
 
-    private static byte[] getDataRegisters(byte[] request) {
-        return new byte[]{1, 4, -98, 0, 5, 25, -48, 0, 0, 1, 101, 67, -94, 48, -39, 64, -107, 92, -5, 51, -57, 39, -44, 65, 24, -80, 72, 47, -96, -88, -118, 0, 0, 0, 0, 0, 92, 0, 93, 0, 0, 0, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, -1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 19, 3, 19, 0, 0, 0, 0, 15, 15, 0, 24, 2, -105, -1, -9, 0, -87, 0, -87, 0, 12, 0, 8, 0, -73, 0, -73, 0, 48, 42, -51, 0, 48, 12, -26, 0, 48, 42, -61, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 71, -22, 96, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 101, -78, -72};
+    private byte[] getDataRegisters(byte[] request) {
+        //return new byte[]{1, 4, -98, 0, 5, 25, -48, 0, 0, 1, 101, 67, -94, 48, -39, 64, -107, 92, -5, 51, -57, 39, -44, 65, 24, -80, 72, 47, -96, -88, -118, 0, 0, 0, 0, 0, 92, 0, 93, 0, 0, 0, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, -1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 19, 3, 19, 0, 0, 0, 0, 15, 15, 0, 24, 2, -105, -1, -9, 0, -87, 0, -87, 0, 12, 0, 8, 0, -73, 0, -73, 0, 48, 42, -51, 0, 48, 12, -26, 0, 48, 42, -61, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 71, -22, 96, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 101, -78, -72};
+        return dataRegister.getRegisterData();
     }
 
     private static byte[] getDeviceId(byte[] request) {
