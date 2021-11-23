@@ -4,6 +4,8 @@ import static com.squorpikkor.echo_2.Constant.DEF_DATA_REGISTERS;
 import static com.squorpikkor.echo_2.Constant.DEF_DATA_REGISTERS_2;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.bluetooth.BluetoothAdapter;
@@ -28,6 +30,13 @@ public class MainActivity extends AppCompatActivity {
         mViewModel.getLetDiscovery().observe(this, this::startDiscovery);
 
 
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, ParamFragment.newInstance())
+                    .commitNow();
+        }
+
+
         Log.e("TAG", "onCreate: byte->int = "+Converter.toInt32(new byte[]{101, 1, 0, 0}, 0));
         Log.e("TAG", "onCreate: int->byte = "+ Arrays.toString(Converter.integerToByte(357)));
 
@@ -40,16 +49,10 @@ public class MainActivity extends AppCompatActivity {
         Log.e("TAG", "onCreate: 1 & 255 & 0x01 = "+ (1 & 255 & 0x01));
         Log.e("TAG", "onCreate: 1 & 255 >> 1 & 1 = "+ (2 & 255 >> 1 & 1));
 
-
-
-//        Log.e("TAG", "onCreate: crc = "+ Converter.calcCRC(DEF_DATA_REGISTERS));
-//        Log.e("TAG", "onCreate: crc = "+ Arrays.toString(Converter.integerToByte(Converter.calcCRC(DEF_DATA_REGISTERS))));
-//        Log.e("TAG", "onCreate: crc = "+ Arrays.toString(Converter.integerToByte(Converter.calcCRC(DEF_DATA_REGISTERS_2))));
-
-        EditText countText = findViewById(R.id.count);
+//        EditText countText = findViewById(R.id.count);
 
 //        findViewById(R.id.button).setOnClickListener(v->mViewModel.getDataRegisters().setG_momcps(Integer.parseInt(countText.getText().toString())));
-        findViewById(R.id.button).setOnClickListener(v->mViewModel.getDataRegisters().setG_dr(Float.parseFloat(countText.getText().toString())));
+//        findViewById(R.id.button).setOnClickListener(v->mViewModel.getDataRegisters().setG_dr(Float.parseFloat(countText.getText().toString())));
 
     }
 

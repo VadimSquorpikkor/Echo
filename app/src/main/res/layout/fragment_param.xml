@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/shape"
+    android:layout_margin="3dp"
+    android:orientation="vertical">
+
+    <LinearLayout style="@style/horizontal">
+
+        <EditText
+            android:id="@+id/momcps_text"
+            style="@style/dialogLinearEdit"
+            android:importantForAutofill="no"
+            android:inputType="number"
+            android:text="333" />
+
+        <TextView
+            android:id="@+id/momcps_button"
+            style="@style/text_small"
+            android:text="Консолидированная скорость счета" />
+
+        <!--<Button
+            style="@style/customButton"
+            android:background="@drawable/button_shape_selector"
+            />-->
+
+    </LinearLayout>
+
+    <!--<LinearLayout style="@style/horizontalCenter">
+
+        <SeekBar
+            android:id="@+id/seekBar2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:max="501"
+            android:min="1" />
+
+    </LinearLayout>-->
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider" />
+
+    <LinearLayout style="@style/horizontal">
+
+        <EditText
+            android:id="@+id/cps_text"
+            style="@style/dialogLinearEdit"
+            android:importantForAutofill="no"
+            android:inputType="number"
+            android:text="345" />
+
+        <TextView
+            android:id="@+id/cps_button"
+            style="@style/text_small"
+            android:text="Средняя скорость счета" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider" />
+
+    <LinearLayout style="@style/horizontal">
+
+        <EditText
+            android:id="@+id/dr_text"
+            style="@style/dialogLinearEdit"
+            android:importantForAutofill="no"
+            android:inputType="numberDecimal"
+            android:text="0.98" />
+
+        <TextView
+            android:id="@+id/dr_button"
+            style="@style/text_small"
+            android:text="Мощность дозы" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider" />
+
+    <LinearLayout style="@style/horizontal">
+
+        <EditText
+            android:id="@+id/bat_text"
+            style="@style/dialogLinearEdit"
+            android:importantForAutofill="no"
+            android:inputType="numberDecimal"
+            android:text="93" />
+
+        <TextView
+            android:id="@+id/bat_button"
+            style="@style/text_small"
+            android:text="Заряд батареи БТДУ, %" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider" />
+
+    <CheckBox
+        android:layout_marginHorizontal="16dp"
+        android:id="@+id/overload_G_CheckBox"
+        style="@style/checkbox_style"
+        android:text="Перегрузка спектрометрического БД"
+        />
+
+    <CheckBox
+        android:layout_marginHorizontal="16dp"
+        android:id="@+id/overload_H_CheckBox"
+        style="@style/checkbox_style"
+        android:text="Перегрузка широкодиапазонного БД"
+        />
+
+    <CheckBox
+        android:layout_marginHorizontal="16dp"
+        android:id="@+id/overload_N_CheckBox"
+        style="@style/checkbox_style"
+        android:text="Перегрузка нейтронного БД"
+        />
+
+
+
+</LinearLayout>

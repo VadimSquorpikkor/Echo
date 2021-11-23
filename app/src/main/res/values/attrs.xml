@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <attr name="textColor" format="color"/>
+    <attr name="coloredText" format="color"/>
+    <attr name="EditTextBackgroundColor" format="color"/>
+    <attr name="PanelBackgroundColor" format="color"/>
+    <attr name="customButtonPressed" format="color"/>
+    <attr name="customButton" format="color"/>
+
+</resources>

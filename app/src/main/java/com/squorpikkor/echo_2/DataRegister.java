@@ -2,6 +2,8 @@ package com.squorpikkor.echo_2;
 
 import static com.squorpikkor.echo_2.Constant.DEF_DATA_REGISTERS_2;
 
+import android.util.Log;
+
 import java.util.Arrays;
 
 public class DataRegister {
@@ -14,11 +16,66 @@ public class DataRegister {
 
     /**Берет массив байт БЕЗ CRC, рассчитывает CRC и добавляет полученные байты в конец массива. Полученный массив летит в RSA*/
     public byte[] getRegisterData() {
+        raskolbasG_momcps();
+        raskolbasG_cps();
+        raskolbasG_dr();
         byte[] out = Arrays.copyOf(registerData, registerData.length+2);
         byte[] crc = Converter.integerToByte(Converter.calcCRC(registerData));
         out[out.length-1]=crc[0];
         out[out.length-2]=crc[1];
         return out;
+    }
+
+    private int getG_momcps() {
+        byte[] tempData = new byte[4];
+        tempData[3] = registerData[7];
+        tempData[2] = registerData[8];
+        tempData[1] = registerData[9];
+        tempData[0] = registerData[10];
+        return (Converter.toInt32(tempData, 0));
+    }
+
+    private float getG_cps() {
+        byte[] tempData = new byte[4];
+        tempData[3] = registerData[11];
+        tempData[2] = registerData[12];
+        tempData[1] = registerData[13];
+        tempData[0] = registerData[14];
+        return (Converter.toFloat(tempData, 0));
+    }
+
+    private float getG_dr() {
+        byte[] tempData = new byte[4];
+        tempData[3] = registerData[19];
+        tempData[2] = registerData[20];
+        tempData[1] = registerData[21];
+        tempData[0] = registerData[22];
+        return (Converter.toFloat(tempData, 0));
+    }
+
+    /**Чтобы G_momcps не был ровной линией, расколбашивает значение +- 0-4%*/
+    private void raskolbasG_momcps() {
+        int cps = getG_momcps();
+        int maxPercent = 4;//todo процент можно брать из данных
+        double percent = Math.random()*maxPercent*2-maxPercent;
+        int deltaCps = (int)(cps*(percent/100));
+        setG_momcps(cps+deltaCps);
+    }
+
+    private void raskolbasG_cps() {
+        float cps = getG_cps();
+        int maxPercent = 4;//todo процент можно брать из данных
+        double percent = Math.random()*maxPercent*2-maxPercent;
+        float deltaCps = (float)(cps*(percent/100));
+        setG_cps(cps+deltaCps);
+    }
+
+    private void raskolbasG_dr() {
+        float cps = getG_dr()*1000000;
+        int maxPercent = 4;//todo процент можно брать из данных
+        double percent = Math.random()*maxPercent*2-maxPercent;
+        float deltaCps = (float)(cps*(percent/100));
+        setG_dr(cps+deltaCps);
     }
 
     //Register 0
