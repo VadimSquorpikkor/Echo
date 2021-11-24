@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.viewpager.widget.ViewPager;
 
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
@@ -14,6 +15,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.google.android.material.tabs.TabLayout;
 
 import java.util.Arrays;
 
@@ -29,30 +32,14 @@ public class MainActivity extends AppCompatActivity {
         mViewModel = new ViewModelProvider(MainActivity.this).get(MainViewModel.class);
         mViewModel.getLetDiscovery().observe(this, this::startDiscovery);
 
+        TextView infoText = findViewById(R.id.info_text);
+        mViewModel.getInfo().observe(this, infoText::setText);
 
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, ParamFragment.newInstance())
-                    .commitNow();
-        }
-
-
-        Log.e("TAG", "onCreate: byte->int = "+Converter.toInt32(new byte[]{101, 1, 0, 0}, 0));
-        Log.e("TAG", "onCreate: int->byte = "+ Arrays.toString(Converter.integerToByte(357)));
-
-        Log.e("TAG", "onCreate: byte->float = "+Converter.toFloat(new byte[]{72, -31, 122, 63}, 0));
-        Log.e("TAG", "onCreate: float->byte = "+ Arrays.toString(Converter.floatToByte(0.98f)));
-
-        Log.e("TAG", "onCreate: byte->float = "+Converter.toInt16(new byte[]{89, 1}, 0));
-        Log.e("TAG", "onCreate: float->byte = "+ Arrays.toString(Converter.shortToByte((short)345)));
-
-        Log.e("TAG", "onCreate: 1 & 255 & 0x01 = "+ (1 & 255 & 0x01));
-        Log.e("TAG", "onCreate: 1 & 255 >> 1 & 1 = "+ (2 & 255 >> 1 & 1));
-
-//        EditText countText = findViewById(R.id.count);
-
-//        findViewById(R.id.button).setOnClickListener(v->mViewModel.getDataRegisters().setG_momcps(Integer.parseInt(countText.getText().toString())));
-//        findViewById(R.id.button).setOnClickListener(v->mViewModel.getDataRegisters().setG_dr(Float.parseFloat(countText.getText().toString())));
+        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
+        ViewPager viewPager = findViewById(R.id.view_pager);
+        viewPager.setAdapter(sectionsPagerAdapter);
+        TabLayout tabs = findViewById(R.id.tabs);
+        tabs.setupWithViewPager(viewPager);
 
     }
 

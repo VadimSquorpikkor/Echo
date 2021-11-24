@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">ECHO</string>
+    <string name="gamma">Gamma</string>
+    <string name="high_dose">HighDR</string>
+    <string name="neutron">Neutron</string>
+    <string name="btdu">BTDU</string>
 </resources>

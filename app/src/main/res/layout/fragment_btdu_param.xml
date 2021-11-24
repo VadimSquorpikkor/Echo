@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/shape"
+    android:layout_margin="3dp"
+    android:orientation="vertical">
+
+    <LinearLayout style="@style/horizontalCenter">
+
+        <Spinner style="@style/dialogLinearEdit"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout style="@style/horizontal">
+
+        <EditText
+            android:id="@+id/temp_text"
+            style="@style/dialogLinearEdit"
+            android:text="24" />
+
+        <TextView
+            android:id="@+id/temp_button"
+            style="@style/text_small"
+            android:text="Температура" />
+
+    </LinearLayout>
+
+    <!--todo lifetime-->
+
+    <!--todo setCh1_state_id-->
+    <!--todo setCh2_state_id-->
+    <!--todo setCh3_state_id-->
+
+    <View style="@style/divider" />
+
+    <LinearLayout style="@style/horizontal">
+
+        <EditText
+            android:id="@+id/bat_text"
+            style="@style/dialogLinearEdit"
+            android:text="93" />
+
+        <TextView
+            android:id="@+id/bat_button"
+            style="@style/text_small"
+            android:text="Заряд батареи БТДУ, %" />
+
+    </LinearLayout>
+
+    <View style="@style/divider" />
+
+    <!--<LinearLayout style="@style/horizontal">
+
+        <EditText
+            android:id="@+id/work_time_text"
+            style="@style/dialogLinearEdit"
+            android:text="1000" />
+
+        <TextView
+            android:id="@+id/work_time_button"
+            style="@style/text_small"
+            android:text="Время работы" />
+
+    </LinearLayout>
+
+    <View style="@style/divider" />-->
+
+    <LinearLayout style="@style/horizontal">
+
+        <EditText
+            android:id="@+id/bat_temp_text"
+            style="@style/dialogLinearEdit"
+            android:text="50" />
+
+        <TextView
+            android:id="@+id/bat_temp_button"
+            style="@style/text_small"
+            android:text="Температура батареи" />
+
+    </LinearLayout>
+
+    <View style="@style/divider" />
+
+    <LinearLayout style="@style/horizontal">
+
+        <EditText
+            android:id="@+id/diag_ch1_text"
+            style="@style/dialogLinearEdit"
+            android:text="0" />
+
+        <TextView
+            android:id="@+id/diag_ch1_button"
+            style="@style/text_small"
+            android:text="Диагностика канала 1" />
+
+    </LinearLayout>
+
+    <View style="@style/divider" />
+
+    <LinearLayout style="@style/horizontal">
+
+        <EditText
+            android:id="@+id/diag_ch2_text"
+            style="@style/dialogLinearEdit"
+            android:text="0" />
+
+        <TextView
+            android:id="@+id/diag_ch2_button"
+            style="@style/text_small"
+            android:text="Диагностика канала 2" />
+
+    </LinearLayout>
+
+    <View style="@style/divider" />
+
+    <LinearLayout style="@style/horizontal">
+
+        <EditText
+            android:id="@+id/diag_ch3_text"
+            style="@style/dialogLinearEdit"
+            android:text="0" />
+
+        <TextView
+            android:id="@+id/diag_ch3_button"
+            style="@style/text_small"
+            android:text="Диагностика канала 3" />
+
+    </LinearLayout>
+
+    <View style="@style/divider" />
+
+    <LinearLayout style="@style/horizontal">
+
+        <EditText
+            android:id="@+id/diag_adapter_text"
+            style="@style/dialogLinearEdit"
+            android:text="0" />
+
+        <TextView
+            android:id="@+id/diag_adapter_button"
+            style="@style/text_small"
+            android:text="Диагностика адаптера" />
+
+    </LinearLayout>
+
+    <View style="@style/divider" />
+
+    <LinearLayout style="@style/horizontal">
+
+        <EditText
+            android:id="@+id/g_cps_limit_text"
+            style="@style/dialogLinearEdit"
+            android:text="120000" />
+
+        <TextView
+            android:id="@+id/g_cps_limit_button"
+            style="@style/text_small"
+            android:text="CPS Limit" />
+
+    </LinearLayout>
+
+    <View style="@style/divider" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/overload_G_CheckBox"
+        style="@style/checkbox_style"
+        android:layout_marginHorizontal="16dp"
+        android:text="Перегрузка спектрометрического БД" />
+
+    <View style="@style/divider" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/overload_H_CheckBox"
+        style="@style/checkbox_style"
+        android:layout_marginHorizontal="16dp"
+        android:text="Перегрузка широкодиапазонного БД" />
+
+    <View style="@style/divider" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/overload_N_CheckBox"
+        style="@style/checkbox_style"
+        android:layout_marginHorizontal="16dp"
+        android:text="Перегрузка нейтронного БД" />
+
+    <View style="@style/divider" />
+
+
+</LinearLayout>

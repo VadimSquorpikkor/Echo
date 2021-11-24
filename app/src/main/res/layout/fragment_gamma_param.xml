@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="3dp"
+    android:background="@drawable/shape"
+    android:orientation="vertical">
+
+    <LinearLayout style="@style/horizontal">
+
+        <EditText
+            android:id="@+id/momcps_text"
+            style="@style/dialogLinearEdit"
+            android:text="333" />
+
+        <TextView
+            android:id="@+id/momcps_button"
+            style="@style/text_small"
+            android:text="Консолидированная скорость счета" />
+
+    </LinearLayout>
+
+    <View style="@style/divider" />
+
+    <LinearLayout style="@style/horizontal">
+
+        <EditText
+            android:id="@+id/cps_text"
+            style="@style/dialogLinearEdit"
+            android:text="345" />
+
+        <TextView
+            android:id="@+id/cps_button"
+            style="@style/text_small"
+            android:text="Средняя скорость счета" />
+
+    </LinearLayout>
+
+    <View style="@style/divider" />
+
+    <LinearLayout style="@style/horizontal">
+
+        <EditText
+            android:id="@+id/dr_text"
+            style="@style/dialogLinearEdit"
+            android:inputType="numberDecimal"
+            android:text="0.98" />
+
+        <TextView
+            android:id="@+id/dr_button"
+            style="@style/text_small"
+            android:text="Мощность дозы" />
+
+    </LinearLayout>
+
+    <View style="@style/divider" />
+
+    <LinearLayout style="@style/horizontal">
+
+        <EditText
+            android:id="@+id/dose_text"
+            style="@style/dialogLinearEdit"
+            android:text="100" />
+
+        <TextView
+            android:id="@+id/dose_button"
+            style="@style/text_small"
+            android:text="Накопленная доза" />
+
+    </LinearLayout>
+
+    <View style="@style/divider" />
+
+    <LinearLayout style="@style/horizontal">
+
+        <EditText
+            android:id="@+id/dr_err_text"
+            style="@style/dialogLinearEdit"
+            android:inputType="numberDecimal"
+            android:text="9" />
+
+        <TextView
+            android:id="@+id/dr_err_button"
+            style="@style/text_small"
+            android:text="Погрешность мощности дозы, %" />
+
+    </LinearLayout>
+
+    <View style="@style/divider" />
+
+    <LinearLayout style="@style/horizontal">
+
+        <EditText
+            android:id="@+id/cps_err_text"
+            style="@style/dialogLinearEdit"
+            android:inputType="numberDecimal"
+            android:text="4" />
+
+        <TextView
+            android:id="@+id/cps_err_button"
+            style="@style/text_small"
+            android:text="Погрешность скорости счета, %" />
+
+    </LinearLayout>
+
+
+
+</LinearLayout>

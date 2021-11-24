@@ -258,7 +258,7 @@ class BluetoothService {
                     Log.e(TAG, "disconnected", e);
                     info.postValue("Disconnected");
                     try {
-                        Thread.sleep(1000);
+                        Thread.sleep(5000);
                     } catch (InterruptedException interruptedException) {
                         interruptedException.printStackTrace();
                     }

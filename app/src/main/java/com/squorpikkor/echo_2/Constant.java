@@ -86,4 +86,70 @@ class Constant {
      * Read the accumulated spectrum in compressed form
      */
     public static final byte READ_ACCUMULATED_SPECTRUM_COMPRESSED = 0x42;
+
+
+
+
+
+    //Device ID
+
+    /**
+     * ID_BTDU3 device ID
+     */
+    public static final short ID_BTDU3 = 0x30;
+
+    //Detection unit ID
+
+    /**
+     * BDKG04 device ID
+     */
+    public static final short ID_BDKG04 = 0x25;
+
+    /**
+     * ID_BDKN05 device ID
+     */
+    public static final short ID_BDKN05 = 0x2a;
+
+    /**
+     * ID_BDKG11M device ID
+     */
+    public static final short ID_BDKG11M = 0x13;
+
+    /**
+     * ID_BDKG11 device ID
+     */
+    public static final short ID_BDKG11 = 0x0b;
+
+    /**
+     * ID_BDKG19M device ID
+     */
+    public static final short ID_BDKG19M = 0x18;
+
+    /**
+     * ID_BDKG28 device ID
+     */
+    public static final short ID_BDKG28 = 0x31;
+
+    /**
+     * ID_BDKG34 device ID
+     */
+    public static final short ID_BDKG34 = 0x4e;
+
+    /**
+     * ID_BDKG35 device ID
+     */
+    public static final short ID_BDKG35 = 0x1f;
+
+    /**
+     * ID_BDKG03 device ID
+     */
+    public static final short ID_BDKG03 = 0x07;
+
+    /**
+     * ID_STR_I device ID (SrI2 38x38)
+     */
+    public static final short ID_BDKG05C = 0x6a;
+
+
+    public static final short ID_BDKG32 = 0x48;//было неправильно 0x30
 }
