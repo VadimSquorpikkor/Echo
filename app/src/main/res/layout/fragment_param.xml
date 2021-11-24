@@ -7,6 +7,17 @@
     android:layout_margin="3dp"
     android:orientation="vertical">
 
+    <TextView
+        android:id="@+id/info_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edit_text_field"
+        android:layout_margin="8dp"
+        android:textColor="?attr/coloredText"
+        android:textSize="10sp"
+        tools:text="12345"
+        android:paddingHorizontal="8dp"/>
+
     <LinearLayout style="@style/horizontal">
 
         <EditText
@@ -109,27 +120,41 @@
         android:layout_height="1dp"
         android:background="?android:attr/listDivider" />
 
-    <CheckBox
+    <androidx.appcompat.widget.SwitchCompat
         android:layout_marginHorizontal="16dp"
         android:id="@+id/overload_G_CheckBox"
         style="@style/checkbox_style"
         android:text="Перегрузка спектрометрического БД"
         />
 
-    <CheckBox
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider" />
+
+    <androidx.appcompat.widget.SwitchCompat
         android:layout_marginHorizontal="16dp"
         android:id="@+id/overload_H_CheckBox"
         style="@style/checkbox_style"
         android:text="Перегрузка широкодиапазонного БД"
         />
 
-    <CheckBox
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider" />
+
+    <androidx.appcompat.widget.SwitchCompat
         android:layout_marginHorizontal="16dp"
         android:id="@+id/overload_N_CheckBox"
         style="@style/checkbox_style"
         android:text="Перегрузка нейтронного БД"
         />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider" />
 
 
 </LinearLayout>

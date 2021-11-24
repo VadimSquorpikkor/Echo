@@ -6,8 +6,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Switch;
+import android.widget.TextView;
 
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 public class ParamFragment extends Fragment {
@@ -24,6 +28,9 @@ public class ParamFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_param, container, false);
         mViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
 
+        TextView infoText = view.findViewById(R.id.info_text);
+        mViewModel.getInfo().observe(getViewLifecycleOwner(), infoText::setText);
+
         EditText momcpsText = view.findViewById(R.id.momcps_text);
         view.findViewById(R.id.momcps_button).setOnClickListener(v->mViewModel.getDataRegisters().setG_momcps(parseInt(momcpsText)));
 
@@ -37,13 +44,13 @@ public class ParamFragment extends Fragment {
         view.findViewById(R.id.bat_button).setOnClickListener(v->mViewModel.getDataRegisters().setBatCap((short)parseInt(batText)));
 
         // todo это не верно, если блок не был подключен, то после отключения перегрузки он "подключится". Сделать: если -1, то temp = getG_state_prior, set -1; иначе set temp
-        CheckBox g_check = view.findViewById(R.id.overload_G_CheckBox);
+        SwitchCompat g_check = view.findViewById(R.id.overload_G_CheckBox);
         g_check.setOnClickListener(v->mViewModel.getDataRegisters().setG_state_prior((byte)(g_check.isChecked()?-1:1)));
 
-        CheckBox h_check = view.findViewById(R.id.overload_H_CheckBox);
+        SwitchCompat h_check = view.findViewById(R.id.overload_H_CheckBox);
         h_check.setOnClickListener(v->mViewModel.getDataRegisters().setH_state_prior((byte)(h_check.isChecked()?-1:1)));//todo это не верно, если блок не был подключен, то после отключения перегрузки он "подключится"
 
-        CheckBox n_check = view.findViewById(R.id.overload_N_CheckBox);
+        SwitchCompat n_check = view.findViewById(R.id.overload_N_CheckBox);
         n_check.setOnClickListener(v->mViewModel.getDataRegisters().setN_state_prior((byte)(n_check.isChecked()?-1:1)));//todo это не верно, если блок не был подключен, то после отключения перегрузки он "подключится"
 
         return view;

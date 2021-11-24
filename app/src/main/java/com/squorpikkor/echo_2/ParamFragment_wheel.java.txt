@@ -1,0 +1,204 @@
+package com.squorpikkor.echo_2;
+
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.ImageView;
+
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+
+public class ParamFragment_wheel extends Fragment {
+
+
+    /*<ImageView
+    android:src="@drawable/graphic_ring"
+    android:id="@+id/imageView_ring"
+    android:scaleType="matrix"
+    android:layout_height="fill_parent"
+    android:layout_width="fill_parent"></ImageView>*/
+
+    public static ParamFragment_wheel newInstance() {
+        return new ParamFragment_wheel();
+    }
+
+    MainViewModel mViewModel;
+
+
+    private static Bitmap imageOriginal, imageScaled;
+    private static Matrix matrix;
+
+    private ImageView dialer;
+    private int dialerHeight, dialerWidth;
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState
+    ) {
+        View view = inflater.inflate(R.layout.fragment_param, container, false);
+        mViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
+
+        EditText momcpsText = view.findViewById(R.id.momcps_text);
+        view.findViewById(R.id.momcps_button).setOnClickListener(v->mViewModel.getDataRegisters().setG_momcps(parseInt(momcpsText)));
+
+        EditText cpsText = view.findViewById(R.id.cps_text);
+        view.findViewById(R.id.cps_button).setOnClickListener(v->mViewModel.getDataRegisters().setG_cps(parseInt(cpsText)));
+
+        EditText drText = view.findViewById(R.id.dr_text);
+        view.findViewById(R.id.dr_button).setOnClickListener(v->mViewModel.getDataRegisters().setG_dr(parseFloat(drText)));
+
+        EditText batText = view.findViewById(R.id.bat_text);
+        view.findViewById(R.id.bat_button).setOnClickListener(v->mViewModel.getDataRegisters().setBatCap((short)parseInt(batText)));
+
+        // todo это не верно, если блок не был подключен, то после отключения перегрузки он "подключится". Сделать: если -1, то temp = getG_state_prior, set -1; иначе set temp
+        CheckBox g_check = view.findViewById(R.id.overload_G_CheckBox);
+        g_check.setOnClickListener(v->mViewModel.getDataRegisters().setG_state_prior((byte)(g_check.isChecked()?-1:1)));
+
+        CheckBox h_check = view.findViewById(R.id.overload_H_CheckBox);
+        h_check.setOnClickListener(v->mViewModel.getDataRegisters().setH_state_prior((byte)(h_check.isChecked()?-1:1)));//todo это не верно, если блок не был подключен, то после отключения перегрузки он "подключится"
+
+        CheckBox n_check = view.findViewById(R.id.overload_N_CheckBox);
+        n_check.setOnClickListener(v->mViewModel.getDataRegisters().setN_state_prior((byte)(n_check.isChecked()?-1:1)));//todo это не верно, если блок не был подключен, то после отключения перегрузки он "подключится"
+
+
+
+        // load the image only once
+        if (imageOriginal == null) {
+            imageOriginal = BitmapFactory.decodeResource(getResources(), R.drawable.graphic_ring);
+        }
+
+        // initialize the matrix only once
+        if (matrix == null) {
+            matrix = new Matrix();
+        } else {
+            // not needed, you can also post the matrix immediately to restore the old state
+            matrix.reset();
+        }
+
+
+        dialer = (ImageView) view.findViewById(R.id.imageView_ring);
+        dialer.setOnTouchListener(new MyOnTouchListener());
+        dialer.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+
+            @Override
+            public void onGlobalLayout() {
+                // method called more than once, but the values only need to be initialized one time
+                if (dialerHeight == 0 || dialerWidth == 0) {
+                    dialerHeight = dialer.getHeight();
+                    dialerWidth = dialer.getWidth();
+
+                    // resize
+                    Matrix resize = new Matrix();
+                    resize.postScale((float)Math.min(dialerWidth, dialerHeight) / (float)imageOriginal.getWidth(), (float)Math.min(dialerWidth, dialerHeight) / (float)imageOriginal.getHeight());
+                    imageScaled = Bitmap.createBitmap(imageOriginal, 0, 0, imageOriginal.getWidth(), imageOriginal.getHeight(), resize, false);
+
+                    // translate to the image view's center
+                    float translateX = dialerWidth / 2 - imageScaled.getWidth() / 2;
+                    float translateY = dialerHeight / 2 - imageScaled.getHeight() / 2;
+                    matrix.postTranslate(translateX, translateY);
+
+                    dialer.setImageBitmap(imageScaled);
+                    dialer.setImageMatrix(matrix);
+                }
+            }
+        });
+
+
+
+        return view;
+    }
+
+    private void getAndSendInt(EditText edit, View button) {
+        button.setOnClickListener(v->mViewModel.getDataRegisters().setG_momcps(parseInt(edit)));
+    }
+
+    private int parseInt(EditText v) {
+        return Integer.parseInt(v.getText().toString());
+    }
+
+    private float parseFloat(EditText v) {
+        return Float.parseFloat(v.getText().toString());
+    }
+
+    /**
+     * Simple implementation of an {@link View.OnTouchListener} for registering the dialer's touch events.
+     */
+    private class MyOnTouchListener implements View.OnTouchListener {
+
+        private double startAngle;
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+
+            switch (event.getAction()) {
+
+                case MotionEvent.ACTION_DOWN:
+                    startAngle = getAngle(event.getX(), event.getY());
+                    break;
+
+                case MotionEvent.ACTION_MOVE:
+                    double currentAngle = getAngle(event.getX(), event.getY());
+                    rotateDialer((float) (startAngle - currentAngle));
+                    startAngle = currentAngle;
+                    break;
+
+                case MotionEvent.ACTION_UP:
+
+                    break;
+            }
+
+            return true;
+        }
+
+        /**
+         * @return The angle of the unit circle with the image view's center
+         */
+        private double getAngle(double xTouch, double yTouch) {
+            double x = xTouch - (dialerWidth / 2d);
+            double y = dialerHeight - yTouch - (dialerHeight / 2d);
+
+            switch (getQuadrant(x, y)) {
+                case 1:
+                    return Math.asin(y / Math.hypot(x, y)) * 180 / Math.PI;
+                case 2:
+                    return 180 - Math.asin(y / Math.hypot(x, y)) * 180 / Math.PI;
+                case 3:
+                    return 180 + (-1 * Math.asin(y / Math.hypot(x, y)) * 180 / Math.PI);
+                case 4:
+                    return 360 + Math.asin(y / Math.hypot(x, y)) * 180 / Math.PI;
+                default:
+                    return 0;
+            }
+        }
+
+        /**
+         * @return The selected quadrant.
+         */
+        private int getQuadrant(double x, double y) {
+            if (x >= 0) {
+                return y >= 0 ? 1 : 4;
+            } else {
+                return y >= 0 ? 2 : 3;
+            }
+        }
+
+        /**
+         * Rotate the dialer.
+         *
+         * @param degrees The degrees, the dialer should get rotated.
+         */
+        private void rotateDialer(float degrees) {
+            matrix.postRotate(degrees, dialerWidth / 2, dialerHeight / 2);
+
+            dialer.setImageMatrix(matrix);
+        }
+
+    }
+}

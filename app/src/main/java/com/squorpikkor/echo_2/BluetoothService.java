@@ -7,9 +7,12 @@ import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.util.Log;
 
+import androidx.lifecycle.MutableLiveData;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.UUID;
 
@@ -19,15 +22,18 @@ class BluetoothService {
     // Name for the SDP record when creating server socket
     private static final String NAME = "BluetoothChat2";
     // Unique UUID for this application
-//    private static final UUID MY_UUID = UUID.fromString("fa87c0d0-afac-11de-8a39-0800200c9a66");//работает
+//    private static final UUID MY_UUID = UUID.fromString("fa87c0d0-afac-11de-8a39-0800200c9a66");//условно работает
 //    private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
-    private static final UUID MY_UUID = UUID.fromString("00001103-0000-1000-8000-00805f9b34fb");
+    private static final UUID MY_UUID = UUID.fromString("00001103-0000-1000-8000-00805f9b34fb");//работает
 //    private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 //    private static final UUID MY_UUID = UUID.fromString("0000110a-0000-1000-8000-00805f9b34fb");
 
-    DataRegister dataRegister;
+    private DataRegister dataRegister;
 
-    public BluetoothService(DataRegister dataRegister) {
+    private MutableLiveData<String> info;
+
+
+    public BluetoothService(DataRegister dataRegister, MutableLiveData<String> info) {
         Log.e(TAG, "♣START BluetoothService");
         this.mState = STATE_NONE;
         mAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -35,6 +41,8 @@ class BluetoothService {
 //        mBuffer = new byte[3084];
         mTotalBytes = 50;//MESSAGE_DEFAULT_LENGTH;
         this.dataRegister = dataRegister;
+
+        this.info = info;
     }
 
     private int mState;
@@ -92,11 +100,12 @@ class BluetoothService {
             BluetoothSocket socket = null;
             // Listen to the server socket if we're not connected
             while (mState != STATE_CONNECTED && isRunning) {
-            int count = 0;
-                Log.e(TAG, "run: "+count++);
+            //int count = 0;
+                //Log.e(TAG, "run: "+count++);
                 try {
                     Log.e(TAG, "run: Wait connection...");
-                    Thread.sleep(1000);//это только для проверки, потом убрать
+                    info.postValue("Wait connection...");
+                    //Thread.sleep(1000);//это только для проверки, потом убрать
                     socket = mmServerSocket.accept();
                 } catch (Exception e2) {
                     Log.e(TAG, "run: Exception e2");
@@ -142,6 +151,7 @@ class BluetoothService {
 
     public synchronized void connected(BluetoothSocket socket, BluetoothDevice device) {
         Log.e(TAG, "♣connected: ");
+        info.postValue("Connected");
 
         // Cancel any thread currently running a connection
         if (mConnectedThread != null) {
@@ -231,16 +241,27 @@ class BluetoothService {
 
                     byte[] request = Arrays.copyOf(buffer, currentPosition);
 
+                    info.postValue(">>> "+Arrays.toString(request));
+
                     //Log.e(TAG, ">>> "+Arrays.toString(request));
+
+
 
                     byte[] response = response1.getResponseByRequest(request);
                     if (response!=null) mmOutStream.write(response);
+                    else info.postValue("Unknown request");
 
                     ///mmOutStream.write(new byte[]{1, 17, 18, 48, 0, 1, 114, 21, 10, 4, 0, 12, 0, 12, 6, 0, 0, 0, 0, 0, 0, 51, 46});
 
 
                 } catch (IOException e) {
                     Log.e(TAG, "disconnected", e);
+                    info.postValue("Disconnected");
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException interruptedException) {
+                        interruptedException.printStackTrace();
+                    }
                     connectionLost();
                     break;
                 }

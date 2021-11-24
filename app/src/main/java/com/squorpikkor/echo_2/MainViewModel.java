@@ -16,17 +16,19 @@ public class MainViewModel extends ViewModel {
     private DataRegister dataRegister;
 
     private final MutableLiveData<Boolean> letDiscovery;
+    private final MutableLiveData<String> info;
 
     public MainViewModel() {
         dataRegister = new DataRegister();
 
         this.letDiscovery = new MutableLiveData<>(false);
+        this.info = new MutableLiveData<>();
 
         // Get local Bluetooth adapter
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
         // Initialize the BluetoothService to perform bluetooth connections
-        mService = new BluetoothService(dataRegister);
+        mService = new BluetoothService(dataRegister, info);
 
         ensureDiscoverable();
     }
@@ -38,6 +40,9 @@ public class MainViewModel extends ViewModel {
     }
     public MutableLiveData<Boolean> getLetDiscovery() {
         return letDiscovery;
+    }
+    public MutableLiveData<String> getInfo() {
+        return info;
     }
 
     private void ensureDiscoverable() {
