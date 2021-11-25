@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -30,6 +31,9 @@ public class NeutronParamFragment extends Fragment {
         view.findViewById(R.id.dose_button).setOnClickListener(v->mViewModel.getDataRegisters().setN_dose(parseFloat(R.id.dose_text)));
         view.findViewById(R.id.dr_err_button).setOnClickListener(v->mViewModel.getDataRegisters().setN_dr_err(parseFloat(R.id.dr_err_text)));
         view.findViewById(R.id.cps_err_button).setOnClickListener(v->mViewModel.getDataRegisters().setN_cps_err(parseFloat(R.id.cps_err_text)));
+
+        SwitchCompat n_check = view.findViewById(R.id.overload_N_CheckBox);
+        n_check.setOnClickListener(v->mViewModel.getDataRegisters().setN_state_prior((byte)(n_check.isChecked()?-1:1)));//todo это не верно, если блок не был подключен, то после отключения перегрузки он "подключится"
 
         return view;
     }

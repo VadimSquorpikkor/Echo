@@ -4,11 +4,14 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
-
-import androidx.appcompat.widget.SwitchCompat;
+import android.widget.Spinner;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+
+import java.util.ArrayList;
 
 public class BtduParamFragment extends Fragment {
 
@@ -35,16 +38,50 @@ public class BtduParamFragment extends Fragment {
         view.findViewById(R.id.diag_adapter_button).setOnClickListener(v->mViewModel.getDataRegisters().setAdapter_diag(parseInt(R.id.diag_adapter_text)));
         view.findViewById(R.id.g_cps_limit_button).setOnClickListener(v->mViewModel.getDataRegisters().setG_cps_limit(parseFloat(R.id.g_cps_limit_text)));
 
-        // todo это не верно, если блок не был подключен, то после отключения перегрузки он "подключится". Сделать: если -1, то temp = getG_state_prior, set -1; иначе set temp
-        SwitchCompat g_check = view.findViewById(R.id.overload_G_CheckBox);
-        g_check.setOnClickListener(v->mViewModel.getDataRegisters().setG_state_prior((byte)(g_check.isChecked()?-1:1)));
+        ArrayList<String> list = mViewModel.getBtduConnector().getDUNames();
 
-        SwitchCompat h_check = view.findViewById(R.id.overload_H_CheckBox);
-        h_check.setOnClickListener(v->mViewModel.getDataRegisters().setH_state_prior((byte)(h_check.isChecked()?-1:1)));//todo это не верно, если блок не был подключен, то после отключения перегрузки он "подключится"
+        Spinner ch1 = view.findViewById(R.id.spinner_1);
+        Spinner ch2 = view.findViewById(R.id.spinner_2);
+        Spinner ch3 = view.findViewById(R.id.spinner_3);
+        ArrayAdapter ad = new ArrayAdapter(requireActivity(), R.layout.spinner_item, list);
+        ch1.setAdapter(ad);
+        ch2.setAdapter(ad);
+        ch3.setAdapter(ad);
 
-        SwitchCompat n_check = view.findViewById(R.id.overload_N_CheckBox);
-        n_check.setOnClickListener(v->mViewModel.getDataRegisters().setN_state_prior((byte)(n_check.isChecked()?-1:1)));//todo это не верно, если блок не был подключен, то после отключения перегрузки он "подключится"
 
+        ch1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                mViewModel.getBtduConnector().setChannel_1(list.get(i));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+        ch2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                mViewModel.getBtduConnector().setChannel_2(list.get(i));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+        ch3.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                mViewModel.getBtduConnector().setChannel_3(list.get(i));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
 
         return view;
     }

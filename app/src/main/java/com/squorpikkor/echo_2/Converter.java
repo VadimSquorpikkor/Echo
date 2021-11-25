@@ -1,7 +1,5 @@
 package com.squorpikkor.echo_2;
 
-import java.nio.ByteBuffer;
-
 class Converter {
 
 //--------------------------------------------------------------------------------------------------
@@ -71,6 +69,23 @@ class Converter {
         int sum = 0xffff;
         for (byte aDataBuffer : dataBuffer) {
             sum = (sum ^ (aDataBuffer & 255));
+            for (int j = 0; j < 8; j++) {
+                if ((sum & 0x1) == 1) {
+                    sum >>>= 1;
+                    sum = (sum ^ 0xA001);
+                } else {
+                    sum >>>= 1;
+                }
+            }
+        }
+        return sum;
+    }
+
+    /**То же самое, просто игнорируется последние 2 значения*/
+    public static int calcCRC_2ignore(byte[] dataBuffer) {
+        int sum = 0xffff;
+        for (int i = 0; i<dataBuffer.length-2; i++) {
+            sum = (sum ^ (dataBuffer[i] & 255));
             for (int j = 0; j < 8; j++) {
                 if ((sum & 0x1) == 1) {
                     sum >>>= 1;

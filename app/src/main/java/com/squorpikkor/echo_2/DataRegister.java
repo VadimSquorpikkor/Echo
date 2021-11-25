@@ -9,6 +9,7 @@ import java.util.Arrays;
 public class DataRegister {
 
     private byte[] registerData;
+    byte[] out;
 
     public DataRegister() {
         this.registerData = DEF_DATA_REGISTERS_2;
@@ -16,11 +17,15 @@ public class DataRegister {
 
     /**Берет массив байт БЕЗ CRC, рассчитывает CRC и добавляет полученные байты в конец массива. Полученный массив летит в RSA*/
     public byte[] getRegisterData() {
+        out = Arrays.copyOf(registerData, registerData.length+2);
         raskolbasG_momcps();
         raskolbasG_cps();
         raskolbasG_dr();
-        byte[] out = Arrays.copyOf(registerData, registerData.length+2);
-        byte[] crc = Converter.integerToByte(Converter.calcCRC(registerData));
+        raskolbasH_cps();
+        raskolbasH_dr();
+
+//        byte[] crc = Converter.integerToByte(Converter.calcCRC(registerData));
+        byte[] crc = Converter.integerToByte(Converter.calcCRC_2ignore(out));
         out[out.length-1]=crc[0];
         out[out.length-2]=crc[1];
         return out;
@@ -53,29 +58,74 @@ public class DataRegister {
         return (Converter.toFloat(tempData, 0));
     }
 
+    private float getH_cps() {
+        byte[] tempData = new byte[4];
+        tempData[3] = registerData[71];
+        tempData[2] = registerData[72];
+        tempData[1] = registerData[73];
+        tempData[0] = registerData[74];
+        return (Converter.toFloat(tempData, 0));
+    }
+
+    private float getH_dr() {
+        byte[] tempData = new byte[4];
+        tempData[3] = registerData[79];
+        tempData[2] = registerData[80];
+        tempData[1] = registerData[81];
+        tempData[0] = registerData[82];
+        return (Converter.toFloat(tempData, 0));
+    }
+
+    private double raskolbas(float value, int maxPercent) {
+        double percent = Math.random()*maxPercent*2-maxPercent;
+        double delta = value*(percent/100);
+        return value+delta;
+    }
+
     /**Чтобы G_momcps не был ровной линией, расколбашивает значение +- 0-4%*/
     private void raskolbasG_momcps() {
         int cps = getG_momcps();
-        int maxPercent = 4;//todo процент можно брать из данных
-        double percent = Math.random()*maxPercent*2-maxPercent;
-        int deltaCps = (int)(cps*(percent/100));
-        setG_momcps(cps+deltaCps);
+        byte[] bytes = Converter.integerToByte((int)raskolbas(cps, 4));
+        out[7]  = bytes[3];
+        out[8]  = bytes[2];
+        out[9]  = bytes[1];
+        out[10] = bytes[0];
     }
 
     private void raskolbasG_cps() {
         float cps = getG_cps();
-        int maxPercent = 4;//todo процент можно брать из данных
-        double percent = Math.random()*maxPercent*2-maxPercent;
-        float deltaCps = (float)(cps*(percent/100));
-        setG_cps(cps+deltaCps);
+        byte[] bytes = Converter.floatToByte((float)raskolbas(cps, 4));
+        out[11] = bytes[3];
+        out[12] = bytes[2];
+        out[13] = bytes[1];
+        out[14] = bytes[0];
     }
 
     private void raskolbasG_dr() {
         float cps = getG_dr()*1000000;
-        int maxPercent = 4;//todo процент можно брать из данных
-        double percent = Math.random()*maxPercent*2-maxPercent;
-        float deltaCps = (float)(cps*(percent/100));
-        setG_dr(cps+deltaCps);
+        byte[] bytes = Converter.floatToByte((float)(raskolbas(cps, 4))/1000000);
+        out[19] = bytes[3];
+        out[20] = bytes[2];
+        out[21] = bytes[1];
+        out[22] = bytes[0];
+    }
+
+    private void raskolbasH_cps() {
+        float cps = getH_cps();
+        byte[] bytes = Converter.floatToByte((float)raskolbas(cps, 4));
+        out[71] = bytes[3];
+        out[72] = bytes[2];
+        out[73] = bytes[1];
+        out[74] = bytes[0];
+    }
+
+    private void raskolbasH_dr() {
+        float cps = getH_dr()*1000000;
+        byte[] bytes = Converter.floatToByte((float)(raskolbas(cps, 4))/1000000);
+        out[79] = bytes[3];
+        out[80] = bytes[2];
+        out[81] = bytes[1];
+        out[82] = bytes[0];
     }
 
     //Register 0
@@ -138,7 +188,7 @@ public class DataRegister {
 
     //Register 12-13
     public void setG_dose(float value) {
-        byte[] bytes = Converter.floatToByte(value);
+        byte[] bytes = Converter.floatToByte(value/1000000);
         registerData[27] = bytes[3];
         registerData[28] = bytes[2];
         registerData[29] = bytes[1];
@@ -257,7 +307,7 @@ public class DataRegister {
 
     //Register 38-39
     public void setH_dr(float value) {
-        byte[] bytes = Converter.floatToByte(value);
+        byte[] bytes = Converter.floatToByte(value/1000000);
         registerData[79] = bytes[3];
         registerData[80] = bytes[2];
         registerData[81] = bytes[1];

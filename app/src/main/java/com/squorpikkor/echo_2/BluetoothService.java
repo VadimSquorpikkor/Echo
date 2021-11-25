@@ -12,7 +12,6 @@ import androidx.lifecycle.MutableLiveData;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.UUID;
 
@@ -258,7 +257,7 @@ class BluetoothService {
                     Log.e(TAG, "disconnected", e);
                     info.postValue("Disconnected");
                     try {
-                        Thread.sleep(5000);
+                        Thread.sleep(1500);
                     } catch (InterruptedException interruptedException) {
                         interruptedException.printStackTrace();
                     }

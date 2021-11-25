@@ -103,6 +103,13 @@
 
     </LinearLayout>
 
+    <View style="@style/divider" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/overload_H_CheckBox"
+        style="@style/checkbox_style"
+        android:layout_marginHorizontal="16dp"
+        android:text="Перегрузка широкодиапазонного БД" />
 
 
 </LinearLayout>

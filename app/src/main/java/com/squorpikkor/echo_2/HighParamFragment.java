@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
@@ -32,6 +31,9 @@ public class HighParamFragment extends Fragment {
         view.findViewById(R.id.dose_button).setOnClickListener(v->mViewModel.getDataRegisters().setH_dose(parseFloat(R.id.dose_text)));
         view.findViewById(R.id.dr_err_button).setOnClickListener(v->mViewModel.getDataRegisters().setH_dr_err(parseFloat(R.id.dr_err_text)));
         view.findViewById(R.id.cps_err_button).setOnClickListener(v->mViewModel.getDataRegisters().setH_cps_err(parseFloat(R.id.cps_err_text)));
+
+        SwitchCompat h_check = view.findViewById(R.id.overload_H_CheckBox);
+        h_check.setOnClickListener(v->mViewModel.getDataRegisters().setH_state_prior((byte)(h_check.isChecked()?-1:1)));//todo это не верно, если блок не был подключен, то после отключения перегрузки он "подключится"
 
         return view;
     }

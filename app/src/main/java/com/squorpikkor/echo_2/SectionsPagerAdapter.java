@@ -14,7 +14,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
  */
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-    private static final int[] TAB_TITLES = new int[]{R.string.gamma, R.string.high_dose, R.string.neutron, R.string.btdu};
+    private static final int[] TAB_TITLES = new int[]{R.string.btdu, R.string.gamma, R.string.high_dose, R.string.neutron};
     private final Context mContext;
     FragmentManager fm;
     Fragment[] fragments;
@@ -24,10 +24,10 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
         this.fm = fm;
         mContext = context;
         fragments = new Fragment[]{
+                BtduParamFragment.newInstance(),
                 GammaParamFragment.newInstance(),
                 HighParamFragment.newInstance(),
-                NeutronParamFragment.newInstance(),
-                BtduParamFragment.newInstance()
+                NeutronParamFragment.newInstance()
         };
     }
 

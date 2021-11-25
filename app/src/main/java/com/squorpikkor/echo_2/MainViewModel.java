@@ -9,17 +9,19 @@ import androidx.lifecycle.ViewModel;
 public class MainViewModel extends ViewModel {
 
     // Local Bluetooth adapter
-    private BluetoothAdapter mBluetoothAdapter = null;
+    private final BluetoothAdapter mBluetoothAdapter;
     // Member object for the chat services
-    private BluetoothService mService = null;
+    private final BluetoothService mService;
 
-    private DataRegister dataRegister;
+    private final DataRegister dataRegister;
+    private final BTDUConnector btduConnector;
 
     private final MutableLiveData<Boolean> letDiscovery;
     private final MutableLiveData<String> info;
 
     public MainViewModel() {
         dataRegister = new DataRegister();
+        btduConnector = new BTDUConnector(getDataRegisters());
 
         this.letDiscovery = new MutableLiveData<>(false);
         this.info = new MutableLiveData<>();
@@ -38,6 +40,9 @@ public class MainViewModel extends ViewModel {
     public DataRegister getDataRegisters() {
         return dataRegister;
     }
+    public BTDUConnector getBtduConnector() {
+        return btduConnector;
+    }
     public MutableLiveData<Boolean> getLetDiscovery() {
         return letDiscovery;
     }
@@ -49,12 +54,9 @@ public class MainViewModel extends ViewModel {
         if (mBluetoothAdapter.getScanMode() !=
                 BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
             getLetDiscovery().setValue(true);
-            // Start the Bluetooth chat services
-            mService.start();
-        } else {
-            // Start the Bluetooth chat services
-            mService.start();
         }
+        // Start the Bluetooth chat services
+        mService.start();
     }
 
     @Override
